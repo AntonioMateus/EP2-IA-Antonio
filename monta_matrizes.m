@@ -1,4 +1,4 @@
-function [X,Y,corte] = monta_matrizes (treinamento, teste, lag) 
+function [X,Y,corte, minimo, maximo] = monta_matrizes (treinamento, teste, lag) 
 %Após ler as séries de treinamento e teste e concatená-las em um único
 %vetor de entrada, este método cria duas matrizes: uma de entrada e outra 
 %de saida esperada. Em cada linha correspondente de entrada e saida
@@ -10,7 +10,9 @@ function [X,Y,corte] = monta_matrizes (treinamento, teste, lag)
 %linha cujo primeiro elemento na matriz de entrada é o ultimo termo da
 %série temporal de treinamento. Tal índice é empregado na posterior divisão
 %dos conjuntos. 
-    tr = le_arquivo_entrada (treinamento); 
+    tr = le_arquivo_entrada (treinamento);
+    minimo = min(tr); 
+    maximo = max(tr); 
     test = le_arquivo_entrada (teste); 
     S = concatena_entrada(tr, test);
     n = 1+lag; 
