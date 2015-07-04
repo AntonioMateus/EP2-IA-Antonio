@@ -1,4 +1,4 @@
-function [] = principal (treinamento, teste, lag, normaliza, num_epocas, modo)   
+function [fuzzy_mandami] = principal (treinamento, teste, lag, normaliza, num_epocas, modo)   
     [X,Y,c,~,~] = monta_matrizes(treinamento, teste, lag); 
     [X_trein, X_teste, Y_trein, Y_teste] = separa_conjuntos(X, Y, lag, c);
     if (normaliza==1) 
