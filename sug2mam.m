@@ -26,12 +26,7 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein)
     tipos_dfz{5} = 'som';
     
     interval = 0.4;
-
-    matriz(length(tipos_and)*length(tipos_or)*length(tipos_imp)*length(tipos_agr)*length(tipos_dfz),2);
-    
-    in_n = length(fismat.input);
-    out_n = length(fismat.output);
-    
+  
     if nargin < 1,
         error('Numero incorreto de argumentos.');
     end
@@ -57,13 +52,25 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein)
                         fismat.aggMethod = tipos_agr{l};
 
                         fismat.defuzzMethod = tipos_dfz{m};
-
+                        
+                        in_n = length(fismat.input);
+                        out_n = length(fismat.output);
+                        
                         for n = 1:out_n,
                             mf_n = length(fismat.output(n).mf);
                             for o = 1:mf_n,
-                                fismat.output(n).mf(o).type='trimf';
-                               fismat.output(p).mf(q).params=
-                               [(fismat.output(n).mf(o).params(in_n+1)-interval) (fismat.output(n).mf(o).params(in_n+1)) (fismat.output(n).mf(o).params(in_n+1)+interval)];
+                                func = fismat.output(n).mf(o).type;
+                                
+                                if strcmp('linear', func)
+                                    fismat.output(n).mf(o).type = 'trimf';    
+                                    fismat.output(n).mf(o).params = [(fismat.output(n).mf(o).params(in_n+1)-interval) (fismat.output(n).mf(o).params(in_n+1)) (fismat.output(n).mf(o).params(in_n+1)+interval)];
+                                end
+                                
+                                if strcmp('constant', func)
+                                    fismat.output(n).mf(o).type = 'trimf';    
+                                    fismat.output(n).mf(o).params = [(fismat.output(n).mf(o).params(1)-interval) (fismat.output(n).mf(o).params(1)) (fismat.output(n).mf(o).params(1)+interval)];
+                                end
+                                
                             end
                         end
 
@@ -71,8 +78,7 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein)
                         
                         matriz(pos,2) = pos;
 
-                        saida = 
-                            evalfis(X_trein,estruturas_fuzzy(pos));
+                        saida = evalfis(X_trein,estruturas_fuzzy(pos));
 
                         erro = Y_trein - saida; 
                         et = 0; 
@@ -91,6 +97,6 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein)
     
     matriz_ordenada = sortrows(matriz); 
     fuzzy_mamdani_otimo = estruturas_fuzzy(matriz_ordenada(1,2));
-
+    
     out_fismat = fuzzy_mamdani_otimo;
 end
