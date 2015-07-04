@@ -45,13 +45,11 @@ function [fuzzy_sugeno_otimo, erro_otimo] = constroi_fuzzy(X_trein, Y_trein, X_t
     else
         radii = zeros(1,2+lag); 
         for i=1:(1+lag)
-            objeto = evalclusters(X_trein(:,i),'kmeans','Silhouette','KList',1:10);
-            num_clusters_ideal = objeto.OptimalK;
+            num_clusters_ideal = evalclusters_adj (X_trein(:,i), 'kmeans', 1:10);
             clusters = kmeans(X_trein(:,i),num_clusters_ideal);
             radii(1,i) = devolve_vizinhanca(X_trein(:,i),clusters,num_clusters_ideal);
         end    
-        objeto = evalclusters(Y_trein,'kmeans','Silhouette','kList',1:10);
-        num_clusters_ideal = objeto.OptimalK; 
+        num_clusters_ideal = evalclusters_adj (Y_trein, 'kmeans', 1:10); 
         clusters = kmeans(Y_trein,num_clusters_ideal);
         radii(1,(2+lag)) = devolve_vizinhanca(Y_trein,clusters,num_clusters_ideal);
         fismat = genfis2(X_trein,Y_trein,radii); 
