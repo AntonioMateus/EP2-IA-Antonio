@@ -1,4 +1,4 @@
-function [] = principal (treinamento, teste, lag, normaliza, num_epocas)   
+function [] = principal (treinamento, teste, lag, normaliza, num_epocas, modo)   
     [X,Y,c,~,~] = monta_matrizes(treinamento, teste, lag); 
     [X_trein, X_teste, Y_trein, Y_teste] = separa_conjuntos(X, Y, lag, c);
     if (normaliza==1) 
@@ -7,9 +7,9 @@ function [] = principal (treinamento, teste, lag, normaliza, num_epocas)
         s = 'com';
     else 
         s = 'sem';
-    end         
-    [fuzzy_sugeno, erro_treinamento] = constroi_fuzzy(X_trein,Y_trein,treinamento(17),num_epocas);
-    saida = evalfis(X_teste, fuzzy_sugeno);
+    end        
+    [fuzzy_mandami, erro_treinamento] = constroi_fuzzy(X_trein,Y_trein,X_teste,Y_teste,treinamento(17),num_epocas, lag, modo);
+    saida = evalfis(X_teste, fuzzy_mandami);
     erro_teste = Y_teste - saida; 
     et = 0; 
     for i = 1:length(erro_teste)
