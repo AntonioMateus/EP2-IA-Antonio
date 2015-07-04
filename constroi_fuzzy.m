@@ -16,11 +16,10 @@ function [fuzzy_mandami_otimo, erro_otimo] = constroi_fuzzy(X_trein, Y_trein, X_
     treinamento = [X_trein Y_trein];
     teste = [X_teste Y_teste];
     limiar_erro = sqrt(0.05); 
-    m = 1; %default
     if strcmp(modo,'back-propagation')
         m = 0; 
     else 
-        m = 1; 
+        m = 1; %default 
     end
     if lag <= 2
         pos = 1; 
