@@ -1,4 +1,4 @@
-function [fuzzy_mandami_otimo, erro_otimo] = constroi_fuzzy(X_trein, Y_trein, X_teste, Y_teste, indice, num_epocas, lag, modo)
+function [fuzzy_mandami_otimo, erro_otimo] = constroi_fuzzy(X_trein, Y_trein, X_teste, Y_teste, indice, num_epocas, lag, modo, intervalo)
     %nesse EP, sera utilizado o metodo grid partition para a criação de
     %estruturas sugeno 
     tipos_imf = cell(8);
@@ -19,7 +19,7 @@ function [fuzzy_mandami_otimo, erro_otimo] = constroi_fuzzy(X_trein, Y_trein, X_
     if strcmp(modo,'back-propagation')
         m = 0; 
     else 
-        m = 1; %default 
+        m = 1; %default  
     end
     if lag <= 2
         pos = 1; 
@@ -54,7 +54,7 @@ function [fuzzy_mandami_otimo, erro_otimo] = constroi_fuzzy(X_trein, Y_trein, X_
         fismat = genfis2(X_trein,Y_trein,radii); 
         [~,~,~,fuzzy_sugeno_otimo,~] = anfis(treinamento, fismat, [num_epocas limiar_erro 0.01 0.9 1.1],[0 0 0 0],teste,m);    
     end
-    fuzzy_mandami_otimo = sug2mam(fuzzy_sugeno_otimo,X_trein,Y_trein);
+    fuzzy_mandami_otimo = sug2mam(fuzzy_sugeno_otimo,X_trein,Y_trein, intervalo);
     saida = evalfis(X_trein,fuzzy_mandami_otimo);
     erro = Y_trein - saida; 
     erro_otimo = 0; 
