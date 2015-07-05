@@ -1,4 +1,4 @@
-unction [out_fismat] = sug2mam(fismat, X_trein, Y_trein, intervalo)
+function [out_fismat] = sug2mam(fismat, X_trein, Y_trein, intervalo)
 %SUG2MAM Transforma um sistema Fuzzy do tipo Sugeno em  um de tipo Mamdani.    
     tipos_and = cell(2);
     tipos_and{1} = 'min';
@@ -31,8 +31,8 @@ unction [out_fismat] = sug2mam(fismat, X_trein, Y_trein, intervalo)
     if ~strcmp(fismat.type, 'sugeno'),
     	error('A estrutura fis fornecida nao eh do tipo sugeno!');
     end
-    f = newfis(fismat.name,'mandami',fismat.andMethod,fismat.orMethod,fismat.impMethod,fismat.aggMethod,fismat.defuzzMethod);
-    f.input = fismat.input; 
+    f = fismat;
+    f.type = 'mamdani';
     in_n = length(f.input);
     mf_n = length(fismat.output(1).mf);
     valores_crisp = zeros(mf_n,1); 
