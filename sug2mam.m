@@ -1,4 +1,4 @@
-function out_fismat = sug2mam(fismat, X_trein, Y_trein)
+function out_fismat = sug2mam(fismat, X_trein, Y_trein, intervalo)
 %SUG2MAM Transforma um sistema Fuzzy do tipo Sugeno em  um de tipo Mamdani.    
     f = fismat;  
     tipos_and = cell(2);
@@ -25,8 +25,12 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein)
     tipos_dfz{4} = 'lom';
     tipos_dfz{5} = 'som';
     
-    interval = 0.4;
-  
+    interval = intervalo;
+    %%%%%%%%%%%%%%%% Ideia numero 1 %%%%%%%%%%%%%%%%%%%%%
+%     clusters_aux = kmeans(Y_trein,length(f.output(1).mf));
+%     interval = devolve_vizinhanca(Y_trein,clusters_aux,length(f.output(1).mf));
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    
     if nargin < 1,
         error('Numero incorreto de argumentos.');
     end
