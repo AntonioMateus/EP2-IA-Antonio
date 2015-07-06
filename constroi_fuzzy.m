@@ -13,7 +13,7 @@ function [fuzzy_sugeno_otimo, fuzzy_mamdani_otimo, erro_otimo] = constroi_fuzzy(
     tipos_omf = 'constant';
     treinamento = [X_trein Y_trein];
     teste = [X_teste Y_teste];
-    limiar_erro = sqrt(0.05); 
+    limiar_erro = sqrt(0.005); 
 
     pos = 1; 
     matriz = zeros(length(tipos_imf),2);
