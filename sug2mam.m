@@ -1,6 +1,6 @@
-function out_fismat = sug2mam(fismat, X_trein, Y_trein, intervalo)
-%SUG2MAM Transforma um sistema Fuzzy do tipo Sugeno em  um de tipo Mamdani.    
-    f = fismat;  
+function out_fismat = sug2mam(fismat, X_trein, Y_trein, interval)
+%SUG2MAM Transforma um sistema Fuzzy do tipo Sugeno em  um de tipo Mamdani.
+    
     tipos_and = cell(2);
     tipos_and{1} = 'min';
     tipos_and{2} = 'prod';
@@ -24,22 +24,36 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein, intervalo)
     tipos_dfz{3} = 'mom';
     tipos_dfz{4} = 'lom';
     tipos_dfz{5} = 'som';
-    
-    interval = intervalo;
-    %%%%%%%%%%%%%%%% Ideia numero 1 %%%%%%%%%%%%%%%%%%%%%
-%     clusters_aux = kmeans(Y_trein,length(f.output(1).mf));
-%     interval = devolve_vizinhanca(Y_trein,clusters_aux,length(f.output(1).mf));
-    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-    
+
     if nargin < 1,
         error('Numero incorreto de argumentos.');
     end
-    if ~strcmp(f.type, 'sugeno'),
+    if ~strcmp(fismat.type, 'sugeno'),
     	error('A estrutura fis fornecida nao eh do tipo sugeno!');
     end
     
-    f.type='mamdani';
+    fismat.type='mamdani';
     pos = 1;
+    
+    range = fismat.output(1).range(2) - fismat.output(1).range(1);
+    out_n = length(fismat.output);
+%     interval = range/length(fismat.output(1).mf);
+%     display(range);
+%     display(length(fismat.output(1).mf));
+%     display(interval);
+%     pause;
+    for n = 1:out_n,
+        mf_n = length(fismat.output(n).mf);
+        for o = 1:mf_n,
+            func = fismat.output(n).mf(o).type;
+            if strcmp('linear', func)
+                fismat.output(n).mf(o).type = 'trimf';    
+                fismat.output(n).mf(o).params = [(fismat.output(n).mf(o).params(end)-interval) (fismat.output(n).mf(o).params(end)) (fismat.output(n).mf(o).params(end)+interval)];
+            elseif strcmp('constant', func)
+                fismat.output(n).mf(o).type = 'trimf';    
+                fismat.output(n).mf(o).params = [(fismat.output(n).mf(o).params(1)-interval) (fismat.output(n).mf(o).params(1)) (fismat.output(n).mf(o).params(1)+interval)];
+        end
+    end
     
     for i = 1:length(tipos_and)
         for j = 1:length(tipos_or)
@@ -47,38 +61,17 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein, intervalo)
                 for l = 1:length(tipos_agr)  
                     for m = 1:length(tipos_dfz)
                                 
-                        f.andMethod = tipos_and{i};
+                        fismat.andMethod = tipos_and{i};
 
-                        f.orMethod = tipos_or{j};
+                        fismat.orMethod = tipos_or{j};
 
-                        f.impMethod = tipos_imp{k};
+                        fismat.impMethod = tipos_imp{k};
 
-                        f.aggMethod = tipos_agr{l};
+                        fismat.aggMethod = tipos_agr{l};
 
-                        f.defuzzMethod = tipos_dfz{m};
-                        
-                        in_n = length(f.input);
-                        out_n = length(f.output);
-                        
-                        for n = 1:out_n,
-                            mf_n = length(f.output(n).mf);
-                            for o = 1:mf_n,
-                                func = f.output(n).mf(o).type;
-                                
-                                if strcmp('linear', func)
-                                    f.output(n).mf(o).type = 'trimf';    
-                                    f.output(n).mf(o).params = [(f.output(n).mf(o).params(in_n+1)-interval) (f.output(n).mf(o).params(in_n+1)) (f.output(n).mf(o).params(in_n+1)+interval)];
-                                end
-                                
-                                if strcmp('constant', func)
-                                    f.output(n).mf(o).type = 'trimf';    
-                                    f.output(n).mf(o).params = [(f.output(n).mf(o).params(1)-interval) (f.output(n).mf(o).params(1)) (f.output(n).mf(o).params(1)+interval)];
-                                end
-                                
-                            end
-                        end
+                        fismat.defuzzMethod = tipos_dfz{m};
 
-                        estruturas_fuzzy(pos)=f;
+                        estruturas_fuzzy(pos)=fismat;
                         
                         matriz(pos,2) = pos;
 
