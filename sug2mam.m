@@ -32,29 +32,14 @@ function out_fismat = sug2mam(fismat, X_trein, Y_trein, interval)
     	error('A estrutura fis fornecida nao eh do tipo sugeno!');
     end
     
-    fismat.type='mamdani';
-    pos = 1;
-    
-    range = fismat.output(1).range(2) - fismat.output(1).range(1);
-    out_n = length(fismat.output);
-%     interval = range/length(fismat.output(1).mf);
-%     display(range);
-%     display(length(fismat.output(1).mf));
-%     display(interval);
-%     pause;
-    for n = 1:out_n,
-        mf_n = length(fismat.output(n).mf);
-        for o = 1:mf_n,
-            func = fismat.output(n).mf(o).type;
-            if strcmp('linear', func)
-                fismat.output(n).mf(o).type = 'trimf';    
-                fismat.output(n).mf(o).params = [(fismat.output(n).mf(o).params(end)-interval) (fismat.output(n).mf(o).params(end)) (fismat.output(n).mf(o).params(end)+interval)];
-            elseif strcmp('constant', func)
-                fismat.output(n).mf(o).type = 'trimf';    
-                fismat.output(n).mf(o).params = [(fismat.output(n).mf(o).params(1)-interval) (fismat.output(n).mf(o).params(1)) (fismat.output(n).mf(o).params(1)+interval)];
-        end
+    fismat.type='mamdani';    
+    mf_n = length(fismat.output(1).mf);
+    for o = 1:mf_n,
+        fismat.output(1).mf(o).type = 'trimf';    
+        fismat.output(1).mf(o).params = [(fismat.output(1).mf(o).params(1)-interval) (fismat.output(1).mf(o).params(1)) (fismat.output(1).mf(o).params(1)+interval)];
     end
     
+    pos = 1;
     for i = 1:length(tipos_and)
         for j = 1:length(tipos_or)
             for k = 1:length(tipos_imp)
