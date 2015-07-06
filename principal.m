@@ -1,5 +1,5 @@
 function [erro_treinamento,et] = principal (treinamento, teste, lag, normaliza, num_epocas, intervalo)   
-
+% RETIRAR INTERVALO!!!!
 [X,Y,c,~,~] = monta_matrizes(treinamento, teste, lag); 
     [X_trein, X_teste, Y_trein, Y_teste] = separa_conjuntos(X, Y, lag, c);
     if (normaliza==1) 
@@ -9,7 +9,7 @@ function [erro_treinamento,et] = principal (treinamento, teste, lag, normaliza, 
 %     else 
 %         s = 'sem';
     end        
-    [fuzzy_sugeno, fuzzy_mamdani, erro_treinamento] = constroi_fuzzy(X_trein,Y_trein,X_teste,Y_teste,treinamento(16),num_epocas, lag, modo, intervalo);
+    [fuzzy_sugeno, fuzzy_mamdani, erro_treinamento] = constroi_fuzzy(X_trein,Y_trein,X_teste,Y_teste,treinamento(6),num_epocas, lag, intervalo);
     saida_teste_mam = evalfis(X_teste, fuzzy_mamdani);
     saida_teste_sug = evalfis(X_teste, fuzzy_sugeno);
     erro_teste = Y_teste - saida_teste_mam; 
